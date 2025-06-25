@@ -5,7 +5,7 @@ function updateCountdown() {
 
     if (diff <= 0) {
         document.getElementById('countdown').innerHTML =
-            '<b>Xách xe lên đi đi bây ơi LES GOOO! 🎉</b>';
+            '<div style="font-size: 2.5rem; font-weight: 800; background: linear-gradient(45deg, #f093fb, #f5576c, #43e97b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: celebrate 1s ease-in-out infinite alternate;">🎉 Xách xe lên đi đi bây ơi LES GOOO! 🎉</div>';
         triggerConfetti();
         swapToChickenAttack();
         return;
@@ -16,10 +16,24 @@ function updateCountdown() {
     const minutes = Math.floor((diff / (1000 * 60)) % 60);
     const seconds = Math.floor((diff / 1000) % 60);
 
-    document.getElementById('days').textContent = days;
-    document.getElementById('hours').textContent = hours;
-    document.getElementById('minutes').textContent = minutes;
-    document.getElementById('seconds').textContent = seconds;
+    // Add leading zeros for consistent formatting
+    document.getElementById('days').textContent = days.toString().padStart(2, '0');
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    
+    // Add celebration animation CSS if it doesn't exist
+    if (!document.getElementById('celebrate-style')) {
+        const style = document.createElement('style');
+        style.id = 'celebrate-style';
+        style.textContent = `
+            @keyframes celebrate {
+                from { transform: scale(1) rotate(-1deg); }
+                to { transform: scale(1.05) rotate(1deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 function triggerConfetti() {
@@ -39,17 +53,11 @@ function swapToChickenAttack() {
         const playBtn = document.getElementById('play-sound-btn');
         
         if (originalVideo && chickenVideo && playBtn) {
-            // Hide and stop original video
             originalVideo.pause();
             originalVideo.style.display = 'none';
-            
-            // Show chicken attack video
             chickenVideo.style.display = 'block';
-            chickenVideo.currentTime = 17; // Start at 0:17
-            chickenVideo.muted = true; // Start muted
-            // Don't autoplay, wait for user to click
-            
-            // Reset and show the button for the new video
+            chickenVideo.currentTime = 17;
+            chickenVideo.muted = true;
             playBtn.style.display = 'flex';
         }
     }
@@ -122,7 +130,7 @@ function scatterImages() {
 }
 
 updateCountdown();
-setInterval(updateCountdown, 1000);
+setInterval(updateCountdown, 1000); // Back to 1-second updates
 setRandomBg();
 setInterval(setRandomBg, 8000);
 scatterImages();
